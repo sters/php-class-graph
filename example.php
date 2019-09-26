@@ -12,7 +12,7 @@ $classRelationList = new DependencyList;
 
 $sourceList = new SourceList;
 $sourceList->registerProjectRootDir(__DIR__);
-$sourceList->add(PhpParser\Parser\Php7::class);
+$sourceList->add(PhpParser\Lexer::class);
 
 $traverser = new Traverser;
 

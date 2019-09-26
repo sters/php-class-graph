@@ -1,0 +1,17 @@
+{
+    "name": "sters/php-class-graph",
+    "authors": [
+        {
+            "name": "sters",
+            "email": "sters@users.noreply.github.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ClassGraph\\": "src"
+        }
+    },
+    "require": {
+        "nikic/php-parser": "^4.2"
+    }
+}

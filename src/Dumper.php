@@ -58,6 +58,6 @@ class Dumper
 
         return implode("\n", array_filter($output, function($o) {
             return !empty($o);
-        }));
+        })) . "\n";
     }
 }

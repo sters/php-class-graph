@@ -36,8 +36,8 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
                 $this->addUsesForNameParts($node->extends->parts);
             }
             // class Foo implements Hoge; => Hoge
-            if (!is_null($node->implements)) {
-                $this->addUsesForNameParts($node->implements->parts);
+            if (!empty($node->implements)) {
+                $this->addUsesForNameParts($node->implements);
             }
         }
 
@@ -46,24 +46,31 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
             if (!empty($node->alias)) {
                 $this->skip[] = $node->alias->name;
             }
-            $this->addUsesForNameParts($node->name->parts, true);
+            $this->addUsesForNameParts($node->name, true);
             $this->skip[] = implode('\\', $node->name->parts);
         }
 
         // Foo\Bar::get(); => Foo\Bar
         if ($node instanceof Expr\ClassConstFetch) {
-            $this->addUsesForNameParts($node->name->parts);
+            $this->addUsesForNameParts($node->name);
         }
 
         // new Foo(); => Foo
         if ($node instanceof Expr\New_) {
-            $this->addUsesForNameParts($node->class->parts);
+            $this->addUsesForNameParts($node->class);
         }
     }
 
-    private function addUsesForNameParts($parts, $raw=false)
+    private function addUsesForNameParts($parts, $raw = false)
     {
         if (empty($parts)) {
+            return;
+        }
+
+        if (is_object($parts)) {
+            if (!empty($parts->parts)) {
+                $this->addUsesForNameParts($parts->parts);
+            }
             return;
         }
 

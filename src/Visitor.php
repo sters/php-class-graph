@@ -23,7 +23,7 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
     public function enterNode(Node $node)
     {
         // namespace Foo;
-        if ($node instanceof Stmt\Namespace_ && $this->namespace === '') {
+        if ($node instanceof Stmt\Namespace_ && $this->namespace === '' && !empty($node->name->parts)) {
             $this->namespace = implode('\\', $node->name->parts);
         }
 

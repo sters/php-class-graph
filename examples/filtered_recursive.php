@@ -2,15 +2,15 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use ClassGraph\Dependency;
-use ClassGraph\SimpleDotDumper;
 use ClassGraph\FilteredRecursiveDependencyChecker;
+use ClassGraph\SimpleDotDumper;
 use ClassGraph\SourceList;
 
 $sourceList = new SourceList;
 $sourceList->registerProjectRootDir(__DIR__ . '/../');
-$sourceList->add(PhpParser\Lexer::class);
+$sourceList->add(PhpParser\Lexer::class); // base file
 
-// skip vendor
+// filter base path
 $checker = new FilteredRecursiveDependencyChecker(
     $sourceList,
     /**
@@ -32,11 +32,11 @@ digraph "classes-dependency" {
 */
 
 
-// skip class
+// filter class
 $checker = new FilteredRecursiveDependencyChecker(
     $sourceList,
     function (string $target, string $baseclass, Dependency $dependency) {
-        return strpos($dependency->getName(), 'PhpParser\\') === 0;
+        return strpos($dependency->getName(), 'Error') !== false;
     }
 );
 $checker->run();
@@ -45,10 +45,9 @@ echo (new SimpleDotDumper($checker->getDependencyList()))->dump();
 Expect Output:
 
 digraph "classes-dependency" {
-	"PhpParser\\Lexer" -> "PhpParser\\Parser\\Tokens" [ minlen = 4 ];
-	"PhpParser\\Lexer" -> "ErrorHandler\\Throwing" [ minlen = 4 ];
+	"PhpParser\\Lexer" -> "PhpParser\\ErrorHandler\\Throwing" [ minlen = 4 ];
 	"PhpParser\\Lexer" -> "PhpParser\\Error" [ minlen = 4 ];
-	"PhpParser\\Lexer" -> "PhpParser\\RuntimeException" [ minlen = 4 ];
-	"PhpParser\\Error" -> "PhpParser\\RuntimeException" [ minlen = 4 ];
+	"PhpParser\\ErrorHandler\\Throwing" -> "PhpParser\\Error" [ minlen = 4 ];
+	"PhpParser\\ErrorHandler\\Throwing" -> "PhpParser\\ErrorHandler" [ minlen = 4 ];
 }
 */

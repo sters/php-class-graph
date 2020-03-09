@@ -7,6 +7,9 @@ use PhpParser\NodeTraverser;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 
+/**
+ * Traverser is wrapper of PhpParser->parse and PhpParser->traverse
+ */
 class Traverser
 {
     /** @var Parser */
@@ -17,6 +20,12 @@ class Traverser
         $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
     }
 
+    /**
+     * do traverse
+     *
+     * @param string $sourceFile
+     * @return Visitor visitet file infomations
+     */
     public function traverse(string $sourceFile): Visitor
     {
         $visitor = new Visitor;

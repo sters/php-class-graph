@@ -3,12 +3,15 @@
 namespace ClassGraph;
 
 use Composer\Autoload\ClassLoader;
+use IteratorAggregate;
 use PhpParser\Error;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
-use IteratorAggregate;
 use ReflectionMethod;
 
+/**
+ * SourceList with class name resolver supported by composer
+ */
 class SourceList implements IteratorAggregate
 {
     /** @var string[] */
@@ -22,6 +25,12 @@ class SourceList implements IteratorAggregate
         $this->loader = $loader;
     }
 
+    /**
+     * Register a just hacky class name resolver from composer's autoloader.
+     *
+     * @param string $path Root path. It's finding $path/vendor/composer/autoload_real.php
+     * @return void
+     */
     public function registerProjectRootDir(string $path)
     {
         $autoloaderFilePath = $path . '/vendor/composer/autoload_real.php';
@@ -45,6 +54,12 @@ class SourceList implements IteratorAggregate
         $this->registerComposerClassLoader($loader);
     }
 
+    /**
+     * Add more source file or class
+     *
+     * @param string $source
+     * @return void
+     */
     public function add(string $source)
     {
         if (!empty($this->loader)) {
@@ -61,6 +76,11 @@ class SourceList implements IteratorAggregate
         $this->targets[] = $source;
     }
 
+    /**
+     * Implement IteratorAggregate
+     *
+     * @return void
+     */
     public function getIterator()
     {
         $check = [];

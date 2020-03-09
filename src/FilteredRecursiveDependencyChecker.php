@@ -18,7 +18,7 @@ class FilteredRecursiveDependencyChecker extends RecursiveDependencyChecker
     public function run()
     {
         if (empty($this->filter)) {
-            $this->filter = function ($a, $b) {
+            $this->filter = function (string $a, string $b, Dependency $c) {
                 return true;
             };
         }
@@ -27,7 +27,7 @@ class FilteredRecursiveDependencyChecker extends RecursiveDependencyChecker
             $visitor = $this->traverser->traverse($target);
             foreach ($visitor->getUses() as $u) {
                 $dependensy = new Dependency($u);
-                if (!call_user_func($this->filter, $target, $visitor->getFullClassName(), $dependensy)) {
+                if (!$this->filter($target, $visitor->getFullClassName(), $dependensy)) {
                     continue;
                 }
                 $this->dependencyList->addDependency($visitor->getFullClassName(), $dependensy);

@@ -1,6 +1,10 @@
 <?php
+
 namespace ClassGraph;
 
+/**
+ * Dependency is ValueObject for keep class name to depends class name list
+ */
 class Dependency
 {
     /** @var string */

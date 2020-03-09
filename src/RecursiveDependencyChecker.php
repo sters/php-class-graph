@@ -2,6 +2,9 @@
 
 namespace ClassGraph;
 
+/**
+ * RecursiveDependencyChecker do Traverser with new blank DependencyList, from SourceList
+ */
 class RecursiveDependencyChecker
 {
     protected $sourceList;

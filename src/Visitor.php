@@ -8,13 +8,16 @@ use PhpParser\Node\Stmt;
 use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
 
+/**
+ * Visitor is implemented NodeVisitor for depedency finding
+ */
 class Visitor extends NodeVisitorAbstract implements NodeVisitor
 {
     protected $namespace = '';
     protected $class = '';
     protected $uses = [];
     protected $skip = [
-        'self', 'static',
+        'self', 'static', 'parent',
     ];
 
     public function enterNode(Node $node)

@@ -1,12 +1,19 @@
 <?php
+
 namespace ClassGraph;
 
-class DotDumper extends Dumper
+/**
+ * SimpleDotDumper is wrapper of DependencyListDumper.
+ * This class provides dot data from DependencyList.
+ */
+class SimpleDotDumper extends DependencyListDumper
 {
-    protected function getHeader(): string {
+    protected function getHeader(): string
+    {
         return "digraph \"classes-dependency\" {";
     }
-    protected function getFooter(): string {
+    protected function getFooter(): string
+    {
         return "}";
     }
 

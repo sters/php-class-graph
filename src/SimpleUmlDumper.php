@@ -1,7 +1,12 @@
 <?php
+
 namespace ClassGraph;
 
-class UmlDumper extends Dumper
+/**
+ * SimpleUmlDumper is wrapper of DependencyListDumper.
+ * This class provides dot data from DependencyList.
+ */
+class SimpleUmlDumper extends DependencyListDumper
 {
     protected function formatClass(Dependency $d, array $counter): string
     {

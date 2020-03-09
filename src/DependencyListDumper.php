@@ -2,14 +2,31 @@
 
 namespace ClassGraph;
 
-class Dumper
+/**
+ * DependencyListDumper can output to text from DependencyList
+ */
+class DependencyListDumper
 {
     /** @var DependencyList */
     protected $list;
 
-    protected function getHeader(): string { return ""; }
-    protected function getFooter(): string { return ""; }
+    protected function getHeader(): string
+    {
+        return "";
+    }
+    protected function getFooter(): string
+    {
+        return "";
+    }
 
+    /**
+     * Format class name for Dependency->getName()
+     * Use at class list definition
+     *
+     * @param Dependency $d current class
+     * @param array $counter unique number aliases for class names
+     * @return string formatted text
+     */
     protected function formatClass(Dependency $d, array $counter): string
     {
         return sprintf(
@@ -19,6 +36,15 @@ class Dumper
         );
     }
 
+    /**
+     * Format graph for 1 current class to 1 depends class
+     * Use at make class list graph
+     *
+     * @param Dependency $d current class
+     * @param Dependency $child depends class
+     * @param array $counter unique number aliases for class names
+     * @return string formatted class graph
+     */
     protected function formatGraph(Dependency $d, Dependency $child, array $counter): string
     {
         return sprintf(
@@ -33,6 +59,11 @@ class Dumper
         $this->list = $list;
     }
 
+    /**
+     * Dump to text from DependencyList
+     *
+     * @return string dumpped text
+     */
     public function dump(): string
     {
         $counter = [];
@@ -56,7 +87,7 @@ class Dumper
 
         $output[] = $this->getFooter();
 
-        return implode("\n", array_filter($output, function($o) {
+        return implode("\n", array_filter($output, function ($o) {
             return !empty($o);
         })) . "\n";
     }

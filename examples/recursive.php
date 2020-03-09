@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use ClassGraph\SourceList;
-use ClassGraph\DotDumper;
+use ClassGraph\SimpleDotDumper;
 use ClassGraph\RecursiveDependencyChecker;
 
 $sourceList = new SourceList;
@@ -11,7 +11,7 @@ $sourceList->add(PhpParser\Lexer::class);
 
 $checker = new RecursiveDependencyChecker($sourceList);
 $checker->run();
-echo (new DotDumper($checker->getDependencyList()))->dump();
+echo (new SimpleDotDumper($checker->getDependencyList()))->dump();
 
 /*
 Output:

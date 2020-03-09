@@ -50,9 +50,19 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
             $this->skip[] = implode('\\', $node->name->parts);
         }
 
-        // Foo\Bar::get(); => Foo\Bar
+        // Foo\Bar::HOGE => Foo\Bar
         if ($node instanceof Expr\ClassConstFetch) {
-            $this->addUsesForNameParts($node->name);
+            $this->addUsesForNameParts($node->class);
+        }
+
+        // Foo\Bar::id => Foo\Bar
+        if ($node instanceof Expr\StaticPropertyFetch) {
+            $this->addUsesForNameParts($node->class);
+        }
+
+        // Foo\Bar::get(); => Foo\Bar
+        if ($node instanceof Expr\StaticCall) {
+            $this->addUsesForNameParts($node->class);
         }
 
         // new Foo(); => Foo

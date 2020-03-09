@@ -12,7 +12,7 @@ class FilteredRecursiveDependencyChecker extends RecursiveDependencyChecker
     public function __construct(SourceList $startSourceList, Closure $filter)
     {
         parent::__construct($startSourceList);
-        $this->filter = $filter;
+        $this->$filter = $filter;
     }
 
     public function run()
@@ -26,11 +26,11 @@ class FilteredRecursiveDependencyChecker extends RecursiveDependencyChecker
         foreach ($this->sourceList as $target) {
             $visitor = $this->traverser->traverse($target);
             foreach ($visitor->getUses() as $u) {
-                $dependensy = new Dependency($u);
-                if (!$this->filter($target, $visitor->getFullClassName(), $dependensy)) {
+                $dependency = new Dependency($u);
+                if (!call_user_func($this->filter, $target, $visitor->getFullClassName(), $dependency)) {
                     continue;
                 }
-                $this->dependencyList->addDependency($visitor->getFullClassName(), $dependensy);
+                $this->dependencyList->addDependency($visitor->getFullClassName(), $dependency);
                 $this->sourceList->add($u);
             }
         }

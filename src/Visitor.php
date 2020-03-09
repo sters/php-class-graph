@@ -51,6 +51,8 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
             }
             $this->addUsesForNameParts($node->name, true);
             $this->skip[] = implode('\\', $node->name->parts);
+            $this->skip[] = $node->name->parts[count($node->name->parts) - 1];
+            $this->skip = array_unique($this->skip);
         }
 
         // Foo\Bar::HOGE => Foo\Bar
@@ -82,14 +84,9 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
 
         if (is_object($parts)) {
             if (!empty($parts->parts)) {
-                $this->addUsesForNameParts($parts->parts);
+                $this->addUsesForNameParts($parts->parts, $raw);
             }
             return;
-        }
-
-        $name = '';
-        if (count($parts) === 1 && !empty($this->namespace)) {
-            $name .= $this->namespace . '\\';
         }
 
         $className = $parts;
@@ -103,6 +100,20 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
         }
         if (in_array($className, $this->skip)) {
             return;
+        }
+
+        $name = '';
+        if (!empty($this->namespace) && !$raw) {
+            $found = false;
+            foreach ($this->skip as $skip) {
+                if ($skip === $className) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $name .= $this->namespace . '\\';
+            }
         }
 
         $this->uses[] = $name . $className;

@@ -34,13 +34,12 @@ class SourceList implements IteratorAggregate
     public function registerProjectRootDir(string $path)
     {
         $autoloaderFilePath = $path . '/vendor/composer/autoload_real.php';
-
-        $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
-        try {
-            $ast = $parser->parse(file_get_contents($autoloaderFilePath));
-        } catch (Error $error) {
+        if (!file_exists($autoloaderFilePath)) {
             return;
         }
+
+        $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+        $ast = $parser->parse(file_get_contents($autoloaderFilePath));
 
         $visitor = new Visitor;
         $traverser = new NodeTraverser();

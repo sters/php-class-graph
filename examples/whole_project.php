@@ -41,14 +41,13 @@ if (!file_exists($projectPath)) {
     exit(1);
 }
 
-
+// register whole project PHP files
 $sourceList = new SourceList;
 $sourceList->registerProjectRootDir($projectPath);
-foreach (glob($projectPath . '/*.php') as $file) {
-    $sourceList->add($file);
-}
-foreach (glob($projectPath . '/**/*.php') as $file) {
-    $sourceList->add($file);
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($projectPath)) as $file) {
+    if ($file->getExtension() === 'php' && strpos($file->getPath(), 'vendor') === false) {
+        $sourceList->add($file);
+    }
 }
 
 // skip vendor

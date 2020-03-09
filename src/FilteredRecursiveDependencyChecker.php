@@ -12,7 +12,7 @@ class FilteredRecursiveDependencyChecker extends RecursiveDependencyChecker
     public function __construct(SourceList $startSourceList, Closure $filter)
     {
         parent::__construct($startSourceList);
-        $this->$filter = $filter;
+        $this->filter = $filter;
     }
 
     public function run()

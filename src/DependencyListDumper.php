@@ -29,11 +29,7 @@ class DependencyListDumper
      */
     protected function formatClass(Dependency $d, array $counter): string
     {
-        return sprintf(
-            "\"%s\" as c%04d",
-            $d->getName(),
-            $counter[$d->getName()]
-        );
+        return '';
     }
 
     /**
@@ -48,9 +44,9 @@ class DependencyListDumper
     protected function formatGraph(Dependency $d, Dependency $child, array $counter): string
     {
         return sprintf(
-            "c%04d -> c%04d",
-            $counter[$d->getName()],
-            $counter[$child->getName()]
+            "%s -> %s",
+            $d->getName(),
+            $child->getName()
         );
     }
 

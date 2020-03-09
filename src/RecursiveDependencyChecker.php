@@ -22,11 +22,10 @@ class RecursiveDependencyChecker
     {
         foreach ($this->sourceList as $target) {
             $visitor = $this->traverser->traverse($target);
+            $base = new Dependency($visitor->getFullClassName());
+            $base->setFileName($target);
             foreach ($visitor->getUses() as $u) {
-                $this->dependencyList->addDependency(
-                    $visitor->getFullClassName(),
-                    new Dependency($u)
-                );
+                $this->dependencyList->addDependency($base, new Dependency($u));
                 $this->sourceList->add($u);
             }
         }

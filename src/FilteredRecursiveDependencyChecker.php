@@ -25,12 +25,14 @@ class FilteredRecursiveDependencyChecker extends RecursiveDependencyChecker
 
         foreach ($this->sourceList as $target) {
             $visitor = $this->traverser->traverse($target);
+            $base = new Dependency($visitor->getFullClassName());
+            $base->setFileName($target);
             foreach ($visitor->getUses() as $u) {
                 $dependency = new Dependency($u);
                 if (!call_user_func($this->filter, $target, $visitor->getFullClassName(), $dependency)) {
                     continue;
                 }
-                $this->dependencyList->addDependency($visitor->getFullClassName(), $dependency);
+                $this->dependencyList->addDependency($base, $dependency);
                 $this->sourceList->add($u);
             }
         }

@@ -9,6 +9,8 @@ class Dependency
 {
     /** @var string */
     protected $name;
+    /** @var string */
+    protected $filename;
     /** @var Dependency[] */
     protected $dependency;
 
@@ -27,7 +29,7 @@ class Dependency
      */
     public function getName()
     {
-        return $this->name;
+        return $this->name === '' ? $this->getFileName() : $this->name;
     }
 
     /**
@@ -52,5 +54,21 @@ class Dependency
     public function addDependency(Dependency $depend)
     {
         $this->dependency[] = $depend;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileName()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * @param string $filename
+     */
+    public function setFileName(string $filename)
+    {
+        $this->filename = $filename;
     }
 }

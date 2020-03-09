@@ -31,12 +31,12 @@ class DependencyList
      * @param Dependency $targetClass depends to
      * @return void
      */
-    public function addDependency(string $baseClassName, Dependency $targetClass)
+    public function addDependency(Dependency $baseClass, Dependency $targetClass)
     {
-        if (empty($this->relations[$baseClassName])) {
-            $this->register(new Dependency($baseClassName));
+        if (empty($this->relations[$baseClass->getName()])) {
+            $this->register($baseClass);
         }
-        $this->relations[$baseClassName]->addDependency($targetClass);
+        $this->relations[$baseClass->getName()]->addDependency($targetClass);
     }
 
     /**

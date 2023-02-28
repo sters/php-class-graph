@@ -35,4 +35,14 @@ class RecursiveDependencyChecker
     {
         return $this->dependencyList;
     }
+
+    public function getTraverser(): Traverser
+    {
+        return $this->traverser;
+    }
+
+    public function setTraverser(Traverser $t)
+    {
+        $this->traverser = $t;
+    }
 }

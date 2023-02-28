@@ -39,9 +39,10 @@ class DependencyListDumper
      * @param Dependency $d current class
      * @param Dependency $child depends class
      * @param array $counter unique number aliases for class names
+     * @param int $depSize depth
      * @return string formatted class graph
      */
-    protected function formatGraph(Dependency $d, Dependency $child, array $counter): string
+    protected function formatGraph(Dependency $d, Dependency $child, array $counter, int $depSize): string
     {
         return sprintf(
             "%s -> %s",
@@ -71,13 +72,15 @@ class DependencyListDumper
                 $output[] = $this->formatClass($d, $counter);
             }
 
+            $depSize = count($d->getDependency());
+
             foreach ($d->getDependency() as $child) {
                 if (empty($counter[$child->getName()])) {
                     $counter[$child->getName()] = count($counter);
                     $output[] = $this->formatClass($child, $counter);
                 }
 
-                $output[] = $this->formatGraph($d, $child, $counter);
+                $output[] = $this->formatGraph($d, $child, $counter, $depSize);
             }
         }
 

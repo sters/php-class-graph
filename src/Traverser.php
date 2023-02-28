@@ -15,6 +15,9 @@ class Traverser
     /** @var Parser */
     protected $parser;
 
+    /** @var Visitor */
+    protected $tmpVisitor;
+
     public function __construct()
     {
         $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
@@ -24,11 +27,11 @@ class Traverser
      * do traverse
      *
      * @param string $sourceFile
-     * @return Visitor visitet file infomations
+     * @return Visitor visited file information
      */
     public function traverse(string $sourceFile): Visitor
     {
-        $visitor = new Visitor;
+        $visitor = $this->getVisitor();
 
         try {
             $ast = $this->parser->parse(file_get_contents($sourceFile));
@@ -40,6 +43,18 @@ class Traverser
         $traverser->addVisitor($visitor);
         $traverser->traverse($ast);
 
+        $this->tmpVisitor = null;
+
         return $visitor;
+    }
+
+    public function getVisitor(): Visitor
+    {
+        if (empty($this->tmpVisitor)) {
+            $this->tmpVisitor = new Visitor;
+        }
+
+        return $this->tmpVisitor;
+
     }
 }

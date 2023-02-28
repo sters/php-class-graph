@@ -9,7 +9,7 @@ use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
 
 /**
- * Visitor is implemented NodeVisitor for depedency finding
+ * Visitor is implemented NodeVisitor for dependency finding
  */
 class Visitor extends NodeVisitorAbstract implements NodeVisitor
 {
@@ -19,6 +19,9 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
     protected $skip = [
         'self', 'static', 'parent',
     ];
+
+    /** @var \Closure[] function(Node $node) */
+    protected $hooks = [];
 
     public function enterNode(Node $node)
     {
@@ -73,6 +76,10 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
         // new Foo(); => Foo
         if ($node instanceof Expr\New_) {
             $this->addUsesForNameParts($node->class);
+        }
+
+        foreach ($this->hooks as $hook) {
+            $hook($node);
         }
     }
 
@@ -156,5 +163,13 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
             $ns = '';
         }
         return $ns . $this->getClass();
+    }
+
+    /**
+     * @param $f \Closure function(Node $node)
+     */
+    public function addHook(\Closure $f)
+    {
+        $this->hooks[] = \Closure::bind($f, $this, get_class());
     }
 }

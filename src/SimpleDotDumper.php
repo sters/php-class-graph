@@ -10,7 +10,10 @@ class SimpleDotDumper extends DependencyListDumper
 {
     protected function getHeader(): string
     {
-        return "digraph \"classes-dependency\" {";
+        return implode([
+            "digraph \"classes-dependency\" {",
+            "\tnormalize=true",
+        ], "\n");
     }
     protected function getFooter(): string
     {
@@ -22,12 +25,14 @@ class SimpleDotDumper extends DependencyListDumper
         return "";
     }
 
-    protected function formatGraph(Dependency $d, Dependency $child, array $counter): string
+    protected function formatGraph(Dependency $d, Dependency $child, array $counter, int $depsize): string
     {
         return sprintf(
-            "\t\"%s\" -> \"%s\" [ minlen = 4 ];",
+            "\t\"%s\" -> \"%s\" [ minlen = %d, len = %d ];",
             str_replace('\\', '\\\\', $d->getName()),
-            str_replace('\\', '\\\\', $child->getName())
+            str_replace('\\', '\\\\', $child->getName()),
+            $depsize,
+            $depsize * 2
         );
     }
 }

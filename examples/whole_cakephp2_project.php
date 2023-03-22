@@ -73,7 +73,7 @@ $checker = new FilteredRecursiveDependencyChecker(
             return true;
         };
         $baseIgnored = $ignored(['vendor','Config/Migration','Test']);
-        $appIgnored = $ignored(['AppModel','ApiBaseController','AppController']);
+        $appIgnored = $ignored(['AppModel','AppController']);
 
         return $baseIgnored && $appIgnored;
     }

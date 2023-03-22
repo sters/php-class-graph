@@ -79,7 +79,7 @@ $checker = new FilteredRecursiveDependencyChecker(
     }
 );
 
-$checker->getTraverser()->getVisitor()->addHook(function(Node $node) {
+$checker->getTraverser()->addHook(function(Node $node) {
     // TODO: Not fully supported
     if ($node instanceof Stmt\PropertyProperty) {
         if ($node->name === 'hasOne' || $node->name->name === 'hasOne') {

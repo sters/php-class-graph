@@ -80,8 +80,24 @@ $checker = new FilteredRecursiveDependencyChecker(
 );
 
 $checker->getTraverser()->getVisitor()->addHook(function(Node $node) {
+    // TODO: Not fully supported
     if ($node instanceof Stmt\PropertyProperty) {
+        if ($node->name === 'hasOne' || $node->name->name === 'hasOne') {
+            foreach ($node->default->items as $item) {
+                $this->addUsesForNameParts($item->key->value);
+            }
+        }
+        if ($node->name === 'hasMany' || $node->name->name === 'hasMany') {
+            foreach ($node->default->items as $item) {
+                $this->addUsesForNameParts($item->key->value);
+            }
+        }
         if ($node->name === 'belongsTo' || $node->name->name === 'belongsTo') {
+            foreach ($node->default->items as $item) {
+                $this->addUsesForNameParts($item->key->value);
+            }
+        }
+        if ($node->name === 'hasAndBelongsToMany' || $node->name->name === 'hasAndBelongsToMany') {
             foreach ($node->default->items as $item) {
                 $this->addUsesForNameParts($item->key->value);
             }
@@ -96,6 +112,12 @@ $checker->getTraverser()->getVisitor()->addHook(function(Node $node) {
         if ($node->name === 'components' || $node->name->name === 'components') {
             foreach ($node->default->items as $item) {
                 $this->addUsesForNameParts($item->value->value . 'Component');
+            }
+        }
+
+        if ($node->name === 'actAs' || $node->name->name === 'actAs') {
+            foreach ($node->default->items as $item) {
+                $this->addUsesForNameParts($item->value->value . 'Behavior');
             }
         }
     }

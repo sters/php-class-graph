@@ -89,6 +89,12 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
             return;
         }
 
+        if (is_string($parts)) {
+            $this->uses[] = $parts;
+            $this->uses = array_unique($this->uses);
+            return;
+        }
+
         if (is_object($parts)) {
             if (!empty($parts->parts)) {
                 $this->addUsesForNameParts($parts->parts, $raw);

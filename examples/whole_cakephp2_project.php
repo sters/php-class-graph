@@ -107,14 +107,6 @@ $checker->getTraverser()->getVisitor()->addHook(function(Node $node) {
             }
         }
     }
-
-    if ($node instanceof Expr\FuncCall) {
-        if ($node->name === 'array_push' || $node->name->parts[0] === 'array_push') {
-            if ($node->args[0]->value->var->name === "this" && $node->args[0]->value->name->name === "components") {
-                $this->addUsesForNameParts($node->args[1]->value->value . 'Component');
-            }
-        }
-    }
 });
 
 $checker->run();

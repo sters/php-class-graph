@@ -31,7 +31,10 @@ class Traverser
      */
     public function traverse(string $sourceFile): Visitor
     {
-        $visitor = $this->getVisitor();
+        if ($this->tmpVisitor === null) {
+            $this->getVisitor();
+        }
+        $visitor = clone $this->tmpVisitor;
 
         try {
             $ast = $this->parser->parse(file_get_contents($sourceFile));
@@ -43,8 +46,6 @@ class Traverser
         $traverser->addVisitor($visitor);
         $traverser->traverse($ast);
 
-        $this->tmpVisitor = null;
-
         return $visitor;
     }
 
@@ -55,6 +56,5 @@ class Traverser
         }
 
         return $this->tmpVisitor;
-
     }
 }

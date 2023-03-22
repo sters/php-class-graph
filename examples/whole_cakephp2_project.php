@@ -121,14 +121,6 @@ $checker->getTraverser()->getVisitor()->addHook(function(Node $node) {
             }
         }
     }
-
-    if ($node instanceof Node\Const_) {
-        if ($node->name === 'MODELS' || $node->name->name === 'MODELS') {
-            foreach ($node->value->items as $item) {
-                $this->addUsesForNameParts($item->value->value);
-            }
-        }
-    }
 });
 
 $checker->run();

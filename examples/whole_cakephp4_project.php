@@ -14,7 +14,7 @@ use PhpParser\Node\Stmt;
 
 function showUsage()
 {
-    echo 'Usage: php examples/whole_cakephp2_project.php -p PROJECT_PATH [-d list,csv,dot,uml (default: list)]';
+    echo 'Usage: php examples/whole_cakephp4_project.php -p PROJECT_PATH [-d list,csv,dot,uml (default: list)]';
 }
 
 $projectPath = '';
@@ -73,51 +73,25 @@ $checker = new FilteredRecursiveDependencyChecker(
             return true;
         };
         $baseIgnored = $ignored(['vendor','Config','Test']);
-        $appIgnored = $ignored(['AppModel','AppController']);
+        $appIgnored = $ignored(['AppTable','AppController']);
 
         return $baseIgnored && $appIgnored;
     }
 );
 
 $checker->getTraverser()->addHook(function(Node $node) {
-    // TODO: Not fully supported
-    if ($node instanceof Stmt\PropertyProperty) {
-        if ($node->name === 'hasOne' || $node->name->name === 'hasOne') {
-            foreach ($node->default->items as $item) {
-                $this->addUsesForNameParts($item->key->value);
-            }
-        }
-        if ($node->name === 'hasMany' || $node->name->name === 'hasMany') {
-            foreach ($node->default->items as $item) {
-                $this->addUsesForNameParts($item->key->value);
-            }
-        }
-        if ($node->name === 'belongsTo' || $node->name->name === 'belongsTo') {
-            foreach ($node->default->items as $item) {
-                $this->addUsesForNameParts($item->key->value);
-            }
-        }
-        if ($node->name === 'hasAndBelongsToMany' || $node->name->name === 'hasAndBelongsToMany') {
-            foreach ($node->default->items as $item) {
-                $this->addUsesForNameParts($item->key->value);
+    if ($node instanceof Expr\MethodCall) {
+        if ($node->name === 'fetchTable' || $node->name->name === 'fetchTable') {
+            $name = $node->args[0]->value->value ?? '';
+            if ($name !== '') {
+                $this->addUsesForNameParts('App\\Model\\Table\\' . $name . 'Table');
             }
         }
 
-        if ($node->name === 'uses' || $node->name->name === 'uses') {
-            foreach ($node->default->items as $item) {
-                $this->addUsesForNameParts($item->value->value);
-            }
-        }
-
-        if ($node->name === 'components' || $node->name->name === 'components') {
-            foreach ($node->default->items as $item) {
-                $this->addUsesForNameParts($item->value->value . 'Component');
-            }
-        }
-
-        if ($node->name === 'actAs' || $node->name->name === 'actAs') {
-            foreach ($node->default->items as $item) {
-                $this->addUsesForNameParts($item->value->value . 'Behavior');
+        if ($node->name === 'loadComponent' || $node->name->name === 'loadComponent') {
+            $name = $node->args[0]->value->value ?? '';
+            if ($name !== '') {
+                $this->addUsesForNameParts('App\\Controller\\Component\\' . $name . 'Component');
             }
         }
     }

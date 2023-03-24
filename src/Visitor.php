@@ -31,7 +31,8 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
         }
 
         // class Foo extends Bar implements Hoge; => Bar, Hoge
-        if ($node instanceof Stmt\Class_ && $this->class === '') {
+        // trait Foo {}
+        if (($node instanceof Stmt\Class_ || $node instanceof Stmt\Trait_) && $this->class === '') {
             $this->class = $node->name;
             if (!is_string($node->name)) {
                 $this->class = $node->name->name;
@@ -39,7 +40,7 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
 
             // class Foo extends Bar; => Bar
             if (!is_null($node->extends)) {
-                $this->addUsesForNameParts($node->extends->parts);
+                $this->addUsesForNameParts($node->extends);
             }
             // class Foo implements Hoge; => Hoge
             if (!empty($node->implements)) {
@@ -56,6 +57,13 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
             $this->skip[] = implode('\\', $node->name->parts);
             $this->skip[] = $node->name->parts[count($node->name->parts) - 1];
             $this->skip = array_unique($this->skip);
+        }
+
+        // use Foo\Bar; (trait)
+        if ($node instanceof Stmt\TraitUse) {
+            foreach ($node->traits as $t) {
+                $this->addUsesForNameParts($t);
+            }
         }
 
         // Foo\Bar::HOGE => Foo\Bar
@@ -97,7 +105,11 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
 
         if (is_object($parts)) {
             if (!empty($parts->parts)) {
-                $this->addUsesForNameParts($parts->parts, $raw);
+                $p = $parts->parts;
+                if ($parts instanceof Node\Name\FullyQualified) {
+                    array_unshift($p, '');
+                }
+                $this->addUsesForNameParts($p, $raw);
             }
             return;
         }
@@ -106,6 +118,7 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
         if (is_array($parts)) {
             $className = implode('\\', $parts);
         }
+
         if ($className[0] === '\\' || $raw) {
             $this->uses[] = $className;
             $this->uses = array_unique($this->uses);

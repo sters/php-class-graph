@@ -1,6 +1,8 @@
 # php-class-graph
 
-This project is under experimental. Maybe some part is not implemented yet. Please report if you find issue.
+Walking your PHP project to make relational graph chart.
+
+:warning: This project is under experimental. Maybe some part is not implemented yet. Please report if you find issue.
 
 
 ## Usage

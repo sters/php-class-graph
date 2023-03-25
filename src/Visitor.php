@@ -139,11 +139,11 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
             return $this->resolveNameParts(implode(self::NamespaceSeparator, $parts));
         }
 
-        if ($parts === '\\Array') {
-            throw new \Exception;
-        }
-
         if (is_string($parts)) {
+            if (in_array($parts, $this->skip)) {
+                return '';
+            }
+
             // full
             if ($parts[0] == self::NamespaceSeparator) {
                 return $parts;
@@ -171,7 +171,7 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
     private function addUsesForNameParts($parts, $raw = false)
     {
         $className = $this->resolveNameParts($parts);
-        if ($parts === '') {
+        if ($className === '') {
             return;
         }
 

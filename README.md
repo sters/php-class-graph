@@ -1,5 +1,8 @@
 # php-class-graph
 
+This project is under experimental. Maybe some part is not implemented yet. Please report if you find issue.
+
+
 ## Usage
 
 1. Ready tools
@@ -11,7 +14,3 @@
 
 e.g. `php examples/whole_project.php -p . -d dot | dot -T png | imgcat`
 ![image](https://user-images.githubusercontent.com/1658147/76247220-87b0c180-6282-11ea-8cb5-eb84288f3508.png)
-
-
-
-

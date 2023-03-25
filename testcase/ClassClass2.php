@@ -2,6 +2,6 @@
 
 namespace Foo;
 
-class ClassClass2 extends \Full\Namespace\ExtendsClassWithFullNamespace
+class ClassClass2 extends \FullNamespace\ExtendsClassWithFullNamespace
 {
 }

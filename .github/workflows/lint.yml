@@ -5,14 +5,32 @@ on: pull_request
 jobs:
   phpcs:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v3
+      - uses: reviewdog/action-setup@v1
       - uses: shivammathur/setup-php@v2
       - run: composer install --prefer-dist
       - name: do
         run: ./vendor/bin/phpcs --report=emacs --standard=phpcs.xml ./ | reviewdog -reporter=github-pr-review -efm='%f:%l:%c:%m'
-      - name: try autofix
-        run: ./vendor/bin/phpcbf --standard=phpcs.xml ./
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  phpcbf:
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: reviewdog/action-setup@v1
+      - uses: shivammathur/setup-php@v2
+      - name: do
+        run: ./vendor/bin/phpcbf --standard=phpcs.xml ./ || true
       - name: suggester / phpcs
         uses: reviewdog/action-suggester@v1
         with:
@@ -20,9 +38,16 @@ jobs:
 
   phpstan:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v3
+      - uses: reviewdog/action-setup@v1
       - uses: shivammathur/setup-php@v2
       - run: composer install --prefer-dist
       - name: do
         run: ./vendor/bin/phpstan analyse --error-format=raw --no-progress | reviewdog -reporter=github-pr-review -f=phpstan
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}

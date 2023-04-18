@@ -6,6 +6,10 @@
             "email": "sters@users.noreply.github.com"
         }
     ],
+    "scripts":{
+        "phpcs": "phpcs --report=emacs --standard=phpcs.xml ./",
+        "phpstan": "phpstan analyse --error-format=raw --no-progress"
+    },
     "autoload": {
         "psr-4": {
             "ClassGraph\\": "src"
@@ -13,5 +17,9 @@
     },
     "require": {
         "nikic/php-parser": "^4.2"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.10",
+        "squizlabs/php_codesniffer": "^3.7"
     }
 }

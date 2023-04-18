@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<ruleset name="PSR12">
+    <arg name="extensions" value="php" />
+    <rule ref="PSR12" />
+
+    <exclude-pattern>*/examples/*</exclude-pattern>
+    <exclude-pattern>*/testcase/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+</ruleset>

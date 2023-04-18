@@ -1,0 +1,28 @@
+name: lint
+
+on: pull_request
+
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: shivammathur/setup-php@v2
+      - run: composer install --prefer-dist
+      - name: do
+        run: ./vendor/bin/phpcs --report=emacs --standard=phpcs.xml ./ | reviewdog -reporter=github-pr-review -efm='%f:%l:%c:%m'
+      - name: try autofix
+        run: ./vendor/bin/phpcbf --standard=phpcs.xml ./
+      - name: suggester / phpcs
+        uses: reviewdog/action-suggester@v1
+        with:
+          tool_name: phpcs
+
+  phpstan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: shivammathur/setup-php@v2
+      - run: composer install --prefer-dist
+      - name: do
+        run: ./vendor/bin/phpstan analyse --error-format=raw --no-progress | reviewdog -reporter=github-pr-review -f=phpstan

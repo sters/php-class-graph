@@ -20,7 +20,8 @@ class Traverser
 
     public function __construct()
     {
-        $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+        $this->parser = (new ParserFactory)->
+            create(ParserFactory::PREFER_PHP7);
     }
 
     /**

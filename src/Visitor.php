@@ -40,13 +40,15 @@ class Visitor extends NodeVisitorAbstract implements NodeVisitor
                 $this->class = $node->name->name;
             }
 
-            // class Foo extends Bar; => Bar
-            if (!is_null($node->extends)) {
-                $this->addUsesForNameParts($node->extends);
-            }
-            // class Foo implements Hoge; => Hoge
-            if (!empty($node->implements)) {
-                $this->addUsesForNameParts($node->implements);
+            if ($node instanceof Stmt\Class_) {
+                // class Foo extends Bar; => Bar
+                if (!is_null($node->extends)) {
+                    $this->addUsesForNameParts($node->extends);
+                }
+                // class Foo implements Hoge; => Hoge
+                if (!empty($node->implements)) {
+                    $this->addUsesForNameParts($node->implements);
+                }
             }
             return;
         }
